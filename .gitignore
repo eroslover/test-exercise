@@ -1,0 +1,5 @@
+/.idea
+/logs
+.env
+/docker-compose.local.yml
+**.log

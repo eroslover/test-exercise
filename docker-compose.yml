@@ -1,0 +1,60 @@
+version: '3.5'
+
+volumes:
+  postgres:
+    driver: local
+
+services:
+
+### NGINX Server #########################################
+  nginx:
+    build:
+      context: ./docker/images/nginx
+      dockerfile: Dockerfile
+      args:
+        - PUID=${PUID}
+        - PGID=${PGID}
+    env_file: .env
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+    volumes:
+      - ./project:/var/www/project
+      - ./logs/nginx/:/var/log/nginx
+      - ./docker/images/nginx/sites:/etc/nginx/sites-available
+#      - ./docker/images/nginx/conf/default.conf:/etc/nginx/conf.d/default.conf
+
+### PHP-FPM ##############################################
+  php-fpm:
+    build:
+      context: ./docker/images/php-fpm
+      dockerfile: Dockerfile
+      args:
+        - PUID=${PUID}
+        - PGID=${PGID}
+    ports:
+      - "${PHP_FPM_XDEBUG_PORT}:9003"
+    volumes:
+      - ./project:/var/www/project
+    expose:
+      - "9000"
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    environment:
+      - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
+
+### PostgreSQL ###########################################
+  postgres:
+    build:
+      context: ./docker/images/postgres
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./docker/data/postgres/data:/var/lib/postgresql/data
+      - ./docker/data/postgres/db:/docker-entrypoint-initdb.d
+    ports:
+      - "${POSTGRES_PORT}:5432"
