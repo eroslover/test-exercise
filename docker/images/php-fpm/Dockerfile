@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -yqq \
         libicu-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
+        libpq-dev \
         libpng-dev \
         libpspell-dev \
         libxml2-dev \
@@ -35,8 +36,8 @@ RUN apt-get update && apt-get install -yqq \
     && docker-php-ext-configure intl \
     && docker-php-ext-configure zip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) bcmath bz2 calendar dba exif gd gettext intl mysqli pcntl pspell pdo_mysql \
-        shmop soap sockets sysvmsg sysvsem sysvshm zip
+    && docker-php-ext-install -j$(nproc) bcmath bz2 calendar dba exif gd gettext intl mysqli pcntl pgsql pspell \
+        pdo_mysql pdo_pgsql shmop soap sockets sysvmsg sysvsem sysvshm zip
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
