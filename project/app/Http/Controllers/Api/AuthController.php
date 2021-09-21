@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\LoginFormRequest;
 use App\Http\Requests\Api\Auth\RegisterFormRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Auth;
 
@@ -73,5 +74,20 @@ class AuthController extends Controller
             'errors' => 'Incorrect credentials.',
             'status' => false,
         ], 401);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return $this->response->json([
+            'message' => 'You have been successfully logged out.',
+            'status' => true,
+        ]);
     }
 }
