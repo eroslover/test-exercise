@@ -2,9 +2,15 @@
 
 namespace App\Console;
 
+use App\Console\Commands\GenerateCompilations;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+/**
+ * Class Kernel
+ *
+ * @package App\Console
+ */
 class Kernel extends ConsoleKernel
 {
     /**
@@ -13,7 +19,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        GenerateCompilations::class,
     ];
 
     /**
@@ -24,7 +30,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+         $schedule->command('compilations:generate')->everyMinute();
     }
 
     /**
