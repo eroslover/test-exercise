@@ -44,12 +44,7 @@ class CompilationsController extends Controller
      */
     public function getActual(Request $request)
     {
-        $compilation = $request->user()->actualCompilation;
-
-        if (!$compilation) {
-            $this->service->generate($request->user());
-            $compilation = $request->user()->actualCompilation;
-        }
+        $compilation = $request->user()->actualCompilation ?: $this->service->generate($request->user());
 
         return $this->response->json([
             'data' => new CompilationResource($compilation),

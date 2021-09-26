@@ -15,8 +15,10 @@ class CompilationService
 {
     /**
      * @param \App\Models\User $user
+     *
+     * @return \App\Models\Compilation
      */
-    public function generate(User $user): void
+    public function generate(User $user)
     {
         /** @var \App\Models\Compilation $compilation */
         $compilation = $user->compilations()->create();
@@ -30,6 +32,8 @@ class CompilationService
                 $compilation->exercises()->attach($exercise);
             }
         });
+
+        return $compilation->load('exercises');
     }
 
     /**
