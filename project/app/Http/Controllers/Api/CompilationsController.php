@@ -46,6 +46,11 @@ class CompilationsController extends Controller
     {
         $compilation = $request->user()->actualCompilation;
 
+        if (!$compilation) {
+            $this->service->generate($request->user());
+            $compilation = $request->user()->actualCompilation;
+        }
+
         return $this->response->json([
             'data' => new CompilationResource($compilation),
             'status' => true,
